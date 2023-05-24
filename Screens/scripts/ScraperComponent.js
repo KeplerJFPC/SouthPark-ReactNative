@@ -3,7 +3,6 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 
 const ScraperComponent = ({ palabra, onImageUrl }) => {
-  console.log('Palabra a buscar:', palabra);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +25,6 @@ const ScraperComponent = ({ palabra, onImageUrl }) => {
         const response = await axios.get(url,{ signal: controller.signal });
         const html = response.data;
         controller.abort();
-        console.log(controller.signal.aborted ? "aborted (SCRAPER)" : "not aborted");
         const $ = cheerio.load(html);
         const images = $('img');
   
@@ -99,7 +97,7 @@ const ScraperComponent = ({ palabra, onImageUrl }) => {
             
             case src.includes('.png'):
               if (!encontrado && !src.includes('Site-logo')) {
-                console.log('URL de la imagen encontrada no encontrada:', src);
+                console.log('Poseible Imagen:', src);
                 encontrado = true;
                 controller.abort();
                 onImageUrl(src); // Llamar a la función para guardar la URL en la pantalla
@@ -113,7 +111,7 @@ const ScraperComponent = ({ palabra, onImageUrl }) => {
         controller.abort();
       }
     };
-    if (palabra){
+    if (palabra !== 'undefined'){
       fetchData();
     }else{
       console.log('No hay palabra');
